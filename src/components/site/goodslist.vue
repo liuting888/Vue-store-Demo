@@ -48,7 +48,7 @@
                             <el-carousel :interval="5000" arrow="always">
                             <!-- el-carousel-item 代表每一页 -->
                             <el-carousel-item v-for="item in ginfo.sliderlist" :key="item.id">
-                            <img  height="343" :src="item.img_url" alt="">
+                            <img  height="341" :src="item.img_url" alt="">
                             <h3>{{ item.title }}</h3>
                              </el-carousel-item>
                              </el-carousel>
@@ -97,9 +97,11 @@
        <ul class="img-list">
         
        <li v-for="item in item.datas" :key="item.artID">
-       <a href="/goods/show-91.html">
+            <router-link v-bind="{to:'/site/goodsinfo/'+item.artID}">
        <div class="img-box">
+          
        <img :src="item.img_url">
+
        </div>
        <div class="info">
        <h3  v-text="item.artTitle"></h3>
@@ -112,7 +114,7 @@
        </span>
        </p>
        </div>
-       </a>
+    </router-link>
        </li>
         
        </ul>
@@ -157,7 +159,7 @@
 </script>
 <style scoped>
     .el-carousel__container {
-        height: 343px;
+        height: 341px;
     }
     
     .el-carousel__item h3 {
