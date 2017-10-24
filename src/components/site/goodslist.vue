@@ -18,100 +18,24 @@
                     <div class="banner-nav">
                         <ul>
                         <!--此处声明下面可重复循环-->
-                         
-                            <li>
+                            <li  v-for="(item,index) in ginfo.catelist" :key="index">
                                 <h3>
                                     <i class="iconfont icon-arrow-right"></i>
-                                    <span>手机数码</span>
+                                    <span v-text="item.title"></span>
                                     <p>
-                                     
-                                        手机通讯
-                                     
-                                        摄影摄像
-                                     
-                                        存储设备
-                                     
+                                        <span v-for="(subitem,index) in item.subcates" :key="index">{{subitem.title}} &nbsp;</span>
                                     </p>
                                 </h3>
                                 <div class="item-box">
                                     <!--如有三级分类，此处可循环-->
                                     <dl>
-                                        <dt><a href="/goods/40.html">手机数码</a></dt>
+                                        <dt> <a href="/goods/40.html">{{item.title}}</a></dt>
                                         <dd>
-                                             
-                                            <a href="/goods/43.html">手机通讯</a>
-                                             
-                                            <a href="/goods/44.html">摄影摄像</a>
-                                             
-                                            <a href="/goods/45.html">存储设备</a>
-                                             
+                                            <span v-for="(subitem,index) in item.subcates" :key="index"><a href="javascript:;">{{subitem.title}} &nbsp;</a></span> 
                                         </dd>
                                     </dl>
                                 </div>
                             </li>
-                         
-                            <li>
-                                <h3>
-                                    <i class="iconfont icon-arrow-right"></i>
-                                    <span>电脑办公</span>
-                                    <p>
-                                     
-                                        电脑整机
-                                     
-                                        外设产品
-                                     
-                                        办公打印
-                                     
-                                    </p>
-                                </h3>
-                                <div class="item-box">
-                                    <!--如有三级分类，此处可循环-->
-                                    <dl>
-                                        <dt><a href="/goods/41.html">电脑办公</a></dt>
-                                        <dd>
-                                             
-                                            <a href="/goods/46.html">电脑整机</a>
-                                             
-                                            <a href="/goods/47.html">外设产品</a>
-                                             
-                                            <a href="/goods/48.html">办公打印</a>
-                                             
-                                        </dd>
-                                    </dl>
-                                </div>
-                            </li>
-                         
-                            <li>
-                                <h3>
-                                    <i class="iconfont icon-arrow-right"></i>
-                                    <span>影音娱乐</span>
-                                    <p>
-                                     
-                                        平板电视
-                                     
-                                        音响DVD
-                                     
-                                        影音配件
-                                     
-                                    </p>
-                                </h3>
-                                <div class="item-box">
-                                    <!--如有三级分类，此处可循环-->
-                                    <dl>
-                                        <dt><a href="/goods/42.html">影音娱乐</a></dt>
-                                        <dd>
-                                             
-                                            <a href="/goods/49.html">平板电视</a>
-                                             
-                                            <a href="/goods/50.html">音响DVD</a>
-                                             
-                                            <a href="/goods/51.html">影音配件</a>
-                                             
-                                        </dd>
-                                    </dl>
-                                </div>
-                            </li>
-                         
                         </ul>
                     </div>
                 </div>
@@ -121,20 +45,15 @@
                 <div class="left-705">
                     <div class="banner-img">
                         <div id="focus-box" class="focus-box">
-                            <ul class="slides">
-                                <li class="" style="width: 100%; float: left; margin-right: -100%; position: relative; opacity: 0; display: block; z-index: 1;">
-                                    <a href="/goods.html">
-                                        <img src="/templates/main/images/focus_1.png" draggable="false">
-                                    </a>
-                                </li>
-                                <li style="width: 100%; float: left; margin-right: -100%; position: relative; opacity: 1; display: block; z-index: 2;" class="flex-active-slide">
-                                    <a href="/goods.html">
-                                        <img src="/templates/main/images/focus_2.png" draggable="false">
-                                    </a>
-                                </li>
-                            </ul>
-                        <ol class="flex-control-nav flex-control-paging"><li><a class="">1</a></li><li><a class="flex-active">2</a></li></ol></div>
-                         
+                            <el-carousel :interval="5000" arrow="always">
+                            <!-- el-carousel-item 代表每一页 -->
+                            <el-carousel-item v-for="item in ginfo.sliderlist" :key="item.id">
+                            <img  height="343" :src="item.img_url" alt="">
+                            <h3>{{ item.title }}</h3>
+                             </el-carousel-item>
+                             </el-carousel>
+                       
+                        </div> 
                     </div>
                 </div>
                 <!--/幻灯片-->
@@ -143,68 +62,109 @@
                 <div class="left-220">
                     <ul class="side-img-list">
                      
-                        <li>
+                        <li v-for="(item,index) in ginfo.toplist" :key="index">
                             <div class="img-box">
-                                <label>1</label>
-                                <img src="/upload/201504/20/thumb_201504200314272543.jpg">
+                                <label>{{index + 1}}</label>
+                                <img v-bind:src="item.img_url">
                             </div>
                             <div class="txt-box">
-                                <a href="/goods/show-98.html">奔腾（BNTN） 380功放+纽约至尊 套装家庭影院</a>
-                                <span>2015-04-20</span>
+                                <a href="/goods/show-98.html">{{item.title}}</a>
+                                <span>{{item.add_time | datafmt('YYYY-MM-DD')}}</span>
                             </div>
                         </li>
-                     
-                        <li>
-                            <div class="img-box">
-                                <label>2</label>
-                                <img src="/upload/201504/20/thumb_201504200258403759.jpg">
-                            </div>
-                            <div class="txt-box">
-                                <a href="/goods/show-97.html">三星（SAMSUNG）UA40HU5920JXXZ 40英寸4K超高清</a>
-                                <span>2015-04-20</span>
-                            </div>
-                        </li>
-                     
-                        <li>
-                            <div class="img-box">
-                                <label>3</label>
-                                <img src="/upload/201504/20/thumb_201504200242250674.jpg">
-                            </div>
-                            <div class="txt-box">
-                                <a href="/goods/show-95.html">惠普（HP）LaserJet 2035商用黑白激光打印机（黑色）</a>
-                                <span>2015-04-20</span>
-                            </div>
-                        </li>
-                     
-                        <li>
-                            <div class="img-box">
-                                <label>4</label>
-                                <img src="/upload/201504/20/thumb_201504200239192345.jpg">
-                            </div>
-                            <div class="txt-box">
-                                <a href="/goods/show-94.html">金士顿（Kingston） DataTraveler SE9 32GB 金属U盘</a>
-                                <span>2015-04-20</span>
-                            </div>
-                        </li>
-                     
                     </ul>
                 </div>
                 <!--/推荐商品-->
             </div>
         </div>
     </div>
+
+    <div class="section">
+        <div v-for="(item,index) in clist" :key="index">
+       <!--子类-->
+       <div class="main-tit">
+       <h2 v-text="item.catetitle"></h2>
+       <p>
+        
+        <a v-for="subitem in item.level2catelist" :key="subitem.subcateid" href="/goods/43.html">{{subitem.subcatetitle}}</a>  
+       <i>+</i>
+       </a>
+       </p>
+       </div>
+       <!--/子类-->
+       <div class="wrapper clearfix">
+       <div class="wrap-box">
+       <ul class="img-list">
+        
+       <li v-for="item in item.datas" :key="item.artID">
+       <a href="/goods/show-91.html">
+       <div class="img-box">
+       <img :src="item.img_url">
+       </div>
+       <div class="info">
+       <h3  v-text="item.artTitle"></h3>
+       <p class="price">
+       <b>¥{{item.sell_price}}</b>元</p>
+       <p>
+       <strong>库存 {{item.stock_quantity}}</strong>
+       <span>市场价：
+       <s v-text="item.market_price"> </s>
+       </span>
+       </p>
+       </div>
+       </a>
+       </li>
+        
+       </ul>
+       </div>
+       </div>
     </div>
-</div>
+       </div>
+
+ </div>
+
 </template>
 
 <script>
     export default {
         data() {
-            return {}
+            return {
+                ginfo: {},
+                clist: []
+            }
         },
-        methods: {}
+        created() {
+            this.getginfo();
+            this.getclist();
+        },
+        methods: {
+            getginfo() {
+                this.$http.get('/site/goods/gettopdata/goods').then(res => {
+                    if (res.data.status == 1) {
+                        this.$message.error(res.data.message);
+                        return;
+                    }
+                    this.ginfo = res.data.message;
+                })
+            },
+            getclist() {
+                this.$http.get('/site/goods/getgoodsgroup').then(res => {
+                    this.clist = res.data.message;
+                })
+            }
+        }
     }
 </script>
 <style scoped>
-
+    .el-carousel__container {
+        height: 343px;
+    }
+    
+    .el-carousel__item h3 {
+        color: red;
+        font-size: 18px;
+        opacity: 0.75;
+        line-height: 50px;
+        margin: 0;
+    }
 </style>
