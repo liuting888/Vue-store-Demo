@@ -13,9 +13,8 @@
                         <a href="/login.html">登录</a>
                         <a href="/register.html">注册</a>
                         <strong>|</strong>
-                        <!--<a href="/content/contact.html"><i class="iconfont icon-phone"></i>联系我们</a>
-                                       <a href="/cart.html"><i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount"><script type="text/javascript" src="/tools/submit_ajax.ashx?action=view_cart_count"></script></span>)</a>-->
-                    </div>
+                        <a href="/cart.html"><i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount">{{this.$store.state.buyCount}}</span>)</a>
+                       </div>
                 </div>
             </div>
             <div class="head-nav">
@@ -77,11 +76,16 @@
 </template>
 
 <script>
+    import {
+        vm,
+        key
+    } from './../../kits/vm.js'
     // 实现菜单的翻滚
     $(function() {
         $("#menu2 li a").wrapInner('<span class="out"></span>');
         $("#menu2 li a").each(function() {
             $('<span class="over">' + $(this).text() + '</span>').appendTo(this);
+
         });
 
         $("#menu2 li a").hover(function() {
@@ -105,9 +109,16 @@
 
 
     export default {
-
+        data() {
+            return {
+                buycount: 0
+            }
+        },
         mounted() {
-
+            // 通过注册公共的vm对象来使用$emit和$on来传递值
+            // vm.$on(key, (buycount) => {
+            //     this.buycount += buycount;
+            // })
         }
     }
 </script>

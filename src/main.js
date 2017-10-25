@@ -34,6 +34,37 @@ Vue.prototype.$http = axios;
 Vue.use(axios);
 axios.defaults.withCredentials = true;
 
+//用Vuex来实现购物车数量的改变业务
+//  特点：当state的值一旦发生改变，那么通过 this.$store.state.buyCount 地方就会自动发生改变
+const state = {
+    buyCount: 0
+};
+//  action (购物车按钮点击的时候触发action,代码： this.$store.dispatch('changeBuyCount'),购买数量)
+const actions = {
+    changeBuyCount({ commit }, parmsBuyCount) {
+        commit('changeBuyCount', parmsBuyCount);
+    }
+};
+// 具体执行的代码
+const mutations = {
+    changeBuyCount(state, parmsBuyCount) {
+        state.buyCount += parmsBuyCount;
+    }
+};
+// 对state中的buyCount进行逻辑封装
+const getters = {};
+// 自定义vue全局组件use
+import vuex from 'vuex';
+Vue.use(vuex);
+// 实例化一个Store对象
+const store = new vuex.Store({
+    state,
+    actions,
+    mutations,
+    getters
+})
+
+
 
 import elementUI from 'element-ui';
 Vue.use(elementUI);
@@ -59,6 +90,7 @@ Vue.filter('datafmt', (input, fmtstring) => {
 new Vue({
     el: '#app',
     router,
+    store,
     // es6的写法 :将app当做根组件替换index1.html这个模板中的<div id="app">
     render: create => create(App)
 });
