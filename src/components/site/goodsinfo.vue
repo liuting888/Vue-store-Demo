@@ -12,7 +12,7 @@
     </div>
      
     <!-- 商品详情 -->
-    <div class="section">
+    <div class="section"  v-if="ginfo.goodsinfo">
     <div class="wrapper clearfix">
     <div class="wrap-box">
     <!--页面左边-->

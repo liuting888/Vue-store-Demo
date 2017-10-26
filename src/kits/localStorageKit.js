@@ -5,7 +5,9 @@
  export function setItem(goodsinfo) {
      var goodsObj = getItem();
      //  因为没有getItem()里面没有值返回的是一个字符串，所以需要转换为对象
-     goodsObj = JSON.parse(goodsObj);
+     if (goodsObj == '{}') {
+         goodsObj = JSON.parse(goodsObj);
+     }
      if (goodsObj[goodsinfo.gid]) {
          // 有值,将goodsinfo.bcount追加到goodsObj中当前商品的购买数量中去
          goodsObj[goodsinfo.gid] = goodsObj[goodsinfo.gid] + goodsinfo.bcount;

@@ -14,6 +14,8 @@ import layout from './components/site/layout.vue';
 import goodslist from './components/site/goodslist.vue';
 // 导入商品详情组件
 import goodsinfo from './components/site/goodsinfo.vue';
+import car from './components/site/car.vue';
+
 var router = new vueRouter({
     routes: [
         { name: 'default', path: '/', redirect: '/site' },
@@ -24,6 +26,7 @@ var router = new vueRouter({
             children: [
                 { name: 'goodslist', path: 'goodslist', component: goodslist },
                 { name: 'goodsinfo', path: 'goodsinfo/:goodsid', component: goodsinfo },
+                { name: 'car', path: 'car', component: car }
             ]
         },
     ]
@@ -51,8 +54,28 @@ const mutations = {
         state.buyCount += parmsBuyCount;
     }
 };
+// 导入封装的去localStorage中取值方法
+import { getItem } from './kits/localStorageKit.js'
+
 // 对state中的buyCount进行逻辑封装
-const getters = {};
+const getters = {
+    // 因为购物车中的数量是采用自动刷新会有内存，取得是内存中的值，每次刷新都会消失，需要vuex来传递值
+    getCount(state) {
+        // 先判断内存当中是否存在数量，有的话直接返回
+        if (state.buyCount > 0) {
+            return state.buyCount
+        }
+        // 内存中没有数量，再去localStorage中取值，取得是种类
+        var goodsObj = getItem();
+        var count = 0;
+        for (var key in goodsObj) {
+            count++;
+        };
+        state.buyCount = count;
+        return state.buyCount;
+
+    }
+};
 // 自定义vue全局组件use
 import vuex from 'vuex';
 Vue.use(vuex);

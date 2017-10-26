@@ -13,7 +13,8 @@
                         <a href="/login.html">登录</a>
                         <a href="/register.html">注册</a>
                         <strong>|</strong>
-                        <a href="/cart.html"><i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount">{{this.$store.state.buyCount}}</span>)</a>
+                        <router-link to="/site/car">
+                        <i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount">{{this.$store.getters.getCount}}</span>)</router-link>
                        </div>
                 </div>
             </div>
