@@ -55,7 +55,7 @@
         <th width="54" align="center">操作</th>
         </tr>
         <tr>
-        <td colspan="10" v-if="list.length<=0">
+        <td colspan="10"  v-if="list.length<=0">
         <div class="msg-tips">
         <div class="icon warning"><i class="iconfont icon-tip"></i></div>
         <div class="info">
@@ -65,6 +65,7 @@
         </div>
         </td>
         </tr>
+        
         <tr v-for="(item,index) in list" :key="item.id">
                 <td width="48">
                         <el-switch on-text="买了" off-text="不买" v-model="values[index]"> </el-switch>
@@ -84,8 +85,8 @@
 
         <tr>
         <th align="right" colspan="8">
-        已选择商品 <b class="red" id="totalQuantity">0</b> 件 &nbsp;&nbsp;&nbsp;
-        商品总金额（不含运费）：<span class="red">￥</span><b class="red" id="totalAmount">0</b>元
+        已选择商品 <b class="red" id="totalQuantity" v-text="selectCount"></b> 件 &nbsp;&nbsp;&nbsp;
+        商品总金额（不含运费）：<span class="red">￥</span><b class="red" id="totalAmount" v-text='selletmentAmount'>0</b>元
         </th>
         </tr>
         </tbody></table>
@@ -112,6 +113,9 @@
     export default {
         data() {
             return {
+                // 商品总件数
+                selectCount: 0,
+                // 全选框状态
                 isselectall: false,
                 // 这个数组中的下标的值绑定到表格中的每一行的el-switch
                 values: [],
@@ -135,7 +139,29 @@
                 },
                 // 深度观察
                 // deep: true
-            }
+            },
+        },
+        computed: {
+            // 通过计算属性来得到选择商品件数
+            selletmentAmount() {
+                // 通过filter方法来得到一个values里面全部为true的数组
+                var trueArr = this.values.filter(function(item) {
+                    return item;
+                });
+                // 将新数组的长度值返回给 getCount，当值发生改变页面件数就会更新
+                this.selectCount = trueArr.length;
+                // 声明一个变量用来保存总金额
+                var totalAmount = 0;
+                this.values.forEach((item, index) => {
+                    // 如果item为true的时候，这个index就是我需要统计的数据
+                    if (item) {
+                        // values和list的索引长度一样，得到values为true的索引
+                        var goodsInfo = this.list[index];
+                        totalAmount += (goodsInfo.sell_price * goodsInfo.buycount);
+                    }
+                })
+                return totalAmount;
+            },
         },
         methods: {
             // 完成全选效果
@@ -143,7 +169,10 @@
                 // 遍历values将所有的值用this.isselectall赋值即可
                 for (var i = 0; i < this.values.length; i++) {
                     this.values[i] = this.isselectall;
-                }
+                };
+                // 在计算属性getCount中，在页面点击全选框无法触发计算属性来修改商品件数，所以需要手动改变下数值的长度，让计算属性刷新
+                this.values.push(false);
+                this.values.pop();
             },
             getgoodslist() {
                 var goodsObj = getItem();
