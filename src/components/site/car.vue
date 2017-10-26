@@ -41,7 +41,6 @@
         <!--商品列表-->
         <div class="cart-box">
         <input id="jsondata" name="jsondata" type="hidden">
-        {{values}}
         <table width="100%" align="center" class="cart-table" border="0" cellspacing="0" cellpadding="8">
         <tbody><tr>
         <th width="48">
@@ -79,7 +78,7 @@
                 <myinput @update="update" :options="{gid:item.id,count:item.buycount}"></myinput>
             </td>
             <td width="104" align="left">{{item.buycount*item.sell_price}}(元)</td>                            
-            <td width="54" align="center">删除</td>
+            <td width="54" align="center"  @click="deldata(item.id)"><a href="javascript:;">删除</a></td>
 
         </tr>
 
@@ -111,7 +110,8 @@
 <script>
     // 导入localstorage帮助类
     import {
-        getItem
+        getItem,
+        remoteItem
     } from './../../kits/localStorageKit.js';
     // 导入按钮组件
     import myinput from '../subcom/myinputNumber.vue'
@@ -173,8 +173,25 @@
             },
         },
         methods: {
+            deldata(goodsid) {
+                // 设置一个索引，设置为-1因为没有数值有-1的索引
+                var index = -1;
+                // 通过findIndex找到这个ID的索引
+                index = this.list.findIndex(function(item) {
+                    return item.id == goodsid
+                });
+                // 1. 删除this.list中这个商品数据
+                this.list.splice(index, 1);
+                // 2. 删除 this.values中的这个商品对应的索引下面的数据
+                this.values.splice(index, 1);
+                // 3. 删除localStorage中的这个商品数据
+                remoteItem(goodsid);
+            },
             // 当myinputNumber.vue中触发的事件以后就会自动触发update方法的执行，同时将obj传入
+            // 注意这个obj是经过myinputNumber.vue处理过后的数值
             update(obj) {
+                // obj的格式：{gid:商品的id,count:修改以后的值}
+                // 遍历list数组，找到相同的ID号，并且修改item.buycount里面的数值
                 this.list.forEach(item => {
                     // 修改this.list中当前的obj.gid这个商品的 buycount为obj.count
                     if (item.id == obj.gid) {
