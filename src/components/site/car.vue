@@ -75,9 +75,11 @@
                     <p v-text="item.title"></p>
             </td>
             <td width="84" align="left">{{item.sell_price}}</td>
-            <td width="104" align="center">{{item.buycount}}</td>
+            <td width="84">
+                <myinput @update="update" :options="{gid:item.id,count:item.buycount}"></myinput>
+            </td>
             <td width="104" align="left">{{item.buycount*item.sell_price}}(元)</td>                            
-            <td width="54" align="center">操作</td>
+            <td width="54" align="center">删除</td>
 
         </tr>
 
@@ -107,10 +109,17 @@
 </template>
 
 <script>
+    // 导入localstorage帮助类
     import {
         getItem
-    } from './../../kits/localStorageKit.js'
+    } from './../../kits/localStorageKit.js';
+    // 导入按钮组件
+    import myinput from '../subcom/myinputNumber.vue'
     export default {
+        // 导入按钮组件
+        components: {
+            myinput
+        },
         data() {
             return {
                 // 商品总件数
@@ -164,6 +173,15 @@
             },
         },
         methods: {
+            // 当myinputNumber.vue中触发的事件以后就会自动触发update方法的执行，同时将obj传入
+            update(obj) {
+                this.list.forEach(item => {
+                    // 修改this.list中当前的obj.gid这个商品的 buycount为obj.count
+                    if (item.id == obj.gid) {
+                        item.buycount = obj.count;
+                    }
+                });
+            },
             // 完成全选效果
             allunall() {
                 // 遍历values将所有的值用this.isselectall赋值即可
