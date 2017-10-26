@@ -54,7 +54,7 @@
         <th width="54" align="center">操作</th>
         </tr>
         <tr>
-        <td colspan="10"  v-if="list.length<=0">
+        <td colspan="10"  v-show="isdispaly<=0">
         <div class="msg-tips">
         <div class="icon warning"><i class="iconfont icon-tip"></i></div>
         <div class="info">
@@ -122,6 +122,8 @@
         },
         data() {
             return {
+                // 用来控制购物车为空显示状态
+                isdispaly: 0,
                 // 商品总件数
                 selectCount: 0,
                 // 全选框状态
@@ -144,7 +146,24 @@
                             return this.isselectall = false;　　　　
                         }　　　　　　
                     };
-                    this.isselectall = true;　
+                    // 判断一下购物车里面还有没有商品，没商品全选按钮也不要打开了
+                    if (newValue.length <= 0) {
+                        this.isselectall = false;　
+                    } else {
+                        this.isselectall = true;　
+                    }
+                },
+                // 深度观察
+                // deep: true
+            },
+            // 观察购物车里面是否有商品数量，没有商品就让购物车为空显示出来
+            // 可以直接用v-if=“list.length>=0来判断，但是会先出现购物车为空再展示商品，用户体验不好”
+            list: {　　　　
+                handler: function(newValue, oldValue) {　　　　　　
+                    if (newValue.length == 0) {　　　　　　　　　　　
+                        return this.isdispaly = 0;　　　　
+                    }　　　　　　
+                    this.isdispaly = 1;　
                 },
                 // 深度观察
                 // deep: true
