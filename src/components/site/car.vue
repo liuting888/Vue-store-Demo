@@ -41,19 +41,21 @@
         <!--商品列表-->
         <div class="cart-box">
         <input id="jsondata" name="jsondata" type="hidden">
+        {{values}}
         <table width="100%" align="center" class="cart-table" border="0" cellspacing="0" cellpadding="8">
         <tbody><tr>
-        <th width="48" align="center">
-        <a>全选</a>
+        <th width="48">
+                <el-switch on-text="反选" off-text="全选" v-model="isselectall" @change="allunall">
+                </el-switch>
         </th>
-        <th align="left" colspan="2">商品信息</th>
+        <th align="left">商品信息</th>
         <th width="84" align="left">单价</th>
         <th width="104" align="center">数量</th>
-        <th width="104" align="left">金额(元)</th>                            
+        <th width="104" align="left">总额(元)</th>                            
         <th width="54" align="center">操作</th>
         </tr>
         <tr>
-        <td colspan="10" >
+        <td colspan="10" v-if="list.length<=0">
         <div class="msg-tips">
         <div class="icon warning"><i class="iconfont icon-tip"></i></div>
         <div class="info">
@@ -63,11 +65,17 @@
         </div>
         </td>
         </tr>
-        <tr>
-            <td align="left" colspan="2">商品信息</td>
-            <td width="84" align="left">单价</td>
-            <td width="104" align="center">数量</td>
-            <td width="104" align="left">金额(元)</td>                            
+        <tr v-for="(item,index) in list" :key="item.id">
+                <td width="48">
+                        <el-switch on-text="买了" off-text="不买" v-model="values[index]"> </el-switch>
+                </td>        
+            <td >
+                    <img height="50" width="50" :src="item.img_url" alt="">
+                    <p v-text="item.title"></p>
+            </td>
+            <td width="84" align="left">{{item.sell_price}}</td>
+            <td width="104" align="center">{{item.buycount}}</td>
+            <td width="104" align="left">{{item.buycount*item.sell_price}}(元)</td>                            
             <td width="54" align="center">操作</td>
 
         </tr>
@@ -98,13 +106,66 @@
 </template>
 
 <script>
+    import {
+        getItem
+    } from './../../kits/localStorageKit.js'
     export default {
         data() {
             return {
-
+                isselectall: false,
+                // 这个数组中的下标的值绑定到表格中的每一行的el-switch
+                values: [],
+                // 存储商品列表
+                list: []
             }
         },
-        methods: {}
+        created() {
+            this.getgoodslist();
+        },
+        watch: {
+            // 通过这种语法监控数组，当数组值发生改变就触发逻辑，使用deep:true来深度观察    　
+            values: {　　　　
+                handler: function(newValue, oldValue) {　　　　　　
+                    for (let i = 0; i < newValue.length; i++) {　　　　　　　　
+                        if (newValue[i] == false) {　　　　　　　　　　　
+                            return this.isselectall = false;　　　　
+                        }　　　　　　
+                    };
+                    this.isselectall = true;　
+                },
+                // 深度观察
+                // deep: true
+            }
+        },
+        methods: {
+            // 完成全选效果
+            allunall() {
+                // 遍历values将所有的值用this.isselectall赋值即可
+                for (var i = 0; i < this.values.length; i++) {
+                    this.values[i] = this.isselectall;
+                }
+            },
+            getgoodslist() {
+                var goodsObj = getItem();
+                var idArr = [];
+                for (var key in goodsObj) {
+                    idArr.push(key);
+                };
+                var ids = idArr.join(',');
+                this.$http.get('/site/comment/getshopcargoods/' + ids).then(res => {
+                    // 1.将数据赋值
+                    this.list = res.data.message;
+                    // 2.根据返回的数组个数初始化values数组的个数，值全部是false,用来设置按键初始状态
+                    // 获取localStorage中的购物车数据对象
+                    var goodsObj = getItem();
+                    this.list.forEach((item, index) => {
+                        this.values.push(false);
+                        // 3 将当前商品的数量赋值给 接口中返回的buycount属性,因为后台接口返回的数据是0
+                        item.buycount = goodsObj[item.id];
+                    });
+                })
+            }
+        }
     }
 </script>
 <style scoped>
