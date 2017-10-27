@@ -78,7 +78,7 @@
                 <myinput @update="update" :options="{gid:item.id,count:item.buycount}"></myinput>
             </td>
             <td width="104" align="left">{{item.buycount*item.sell_price}}(元)</td>                            
-            <td width="54" align="center"  @click="deldata(item.id)"><a href="javascript:;">删除</a></td>
+            <td width="54" align="center"><el-button type="success" size="mini" @click="deldata(item.id)">删除</el-button></td>
 
         </tr>
 
@@ -97,7 +97,9 @@
         <div class="cart-foot clearfix">
         <div class="right-box">
         <button class="button" onclick="javascript:location.href='/index.html';">继续购物</button>
-        <button class="submit" onclick="formSubmit(this, '/', '/shopping.html');">立即结算</button>
+        <router-link to="/site/shopping">
+        <button class="submit">立即结算</button>
+        </router-link>
         </div>
         </div>
         <!--购物车底部-->

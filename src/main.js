@@ -15,6 +15,8 @@ import goodslist from './components/site/goodslist.vue';
 // 导入商品详情组件
 import goodsinfo from './components/site/goodsinfo.vue';
 import car from './components/site/car.vue';
+import shopping from './components/site/shopping.vue';
+import login from './components/site/login.vue';
 
 var router = new vueRouter({
     routes: [
@@ -24,6 +26,9 @@ var router = new vueRouter({
             path: '/site',
             component: layout,
             children: [
+                //    meta:{islogin:true}：表示要进行登录检查,只有登录过的才能进入到shopping组件，否则要进入到登录页面
+                { name: 'shopping', path: 'shopping', component: shopping, meta: { islogin: true } },
+                { name: 'login', path: 'login', component: login },
                 { name: 'goodslist', path: 'goodslist', component: goodslist },
                 { name: 'goodsinfo', path: 'goodsinfo/:goodsid', component: goodsinfo },
                 { name: 'car', path: 'car', component: car }
@@ -85,9 +90,7 @@ const store = new vuex.Store({
     actions,
     mutations,
     getters
-})
-
-
+});
 
 import elementUI from 'element-ui';
 Vue.use(elementUI);
@@ -107,7 +110,20 @@ Vue.filter('datafmt', (input, fmtstring) => {
         return y + "-" + m + "-" + d + " " + h + ":" + mi + ":" + s;
     };
 });
-
+// 利用router 的全局守卫钩子函数进行登录验证
+router.beforeEach((to, from, next) => {
+    if (to.meta.islogin) {
+        axios.get('/site/account/islogin').then(res => {
+            if (res.data.code == "logined") {
+                next();
+            } else {
+                router.push({ name: 'login' });
+            }
+        })
+    } else {
+        next();
+    }
+})
 
 
 new Vue({
