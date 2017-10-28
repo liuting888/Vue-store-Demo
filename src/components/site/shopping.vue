@@ -304,11 +304,16 @@
                             .then(res => {
                                 // 提醒
                                 this.$message.success({
-                                    message: res.data.message,
-                                    duration: 3000, //表示提示框是1秒钟以后关闭
+                                    message: "下单成功",
+                                    duration: 2000, //表示提示框是1秒钟以后关闭
                                     onClose: () => {
                                         // 跳转
-                                        //  this.$router.push({name:'goodslist'});
+                                        this.$router.push({
+                                            name: 'pay',
+                                            params: {
+                                                orderid: res.data.message.orderid
+                                            }
+                                        });
                                     }
                                 });
                             });
