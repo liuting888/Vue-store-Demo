@@ -39,4 +39,14 @@
      // delete方法用于删除对象的指定元素（包括变量和函数）
      delete goodsObj[goodsid];
      localStorage.setItem(key, JSON.stringify(goodsObj));
- }
+ };
+
+ //  4. 更新某个商品的购买数量
+ export function updageItem(obj) {
+     // 1. 获取到所有的商品
+     var goodsObj = getItem();
+     //  2.修改gid对应的count
+     goodsObj[obj.gid] = obj.count;
+     // 重新写会
+     localStorage.setItem(key, JSON.stringify(goodsObj));
+ };

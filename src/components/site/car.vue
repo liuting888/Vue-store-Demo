@@ -97,9 +97,8 @@
         <div class="cart-foot clearfix">
         <div class="right-box">
         <button class="button" onclick="javascript:location.href='/index.html';">继续购物</button>
-        <router-link to="/site/shopping">
-        <button class="submit">立即结算</button>
-        </router-link>
+        <button class="submit"
+        @click="toshopping">立即结算</button>
         </div>
         </div>
         <!--购物车底部-->
@@ -113,7 +112,8 @@
     // 导入localstorage帮助类
     import {
         getItem,
-        remoteItem
+        remoteItem,
+        updageItem
     } from './../../kits/localStorageKit.js';
     // 导入按钮组件
     import myinput from '../subcom/myinputNumber.vue'
@@ -172,6 +172,7 @@
             },
         },
         computed: {
+
             // 通过计算属性来得到选择商品件数
             selletmentAmount() {
                 // 通过filter方法来得到一个values里面全部为true的数组
@@ -194,6 +195,34 @@
             },
         },
         methods: {
+            //1. 跳转到结算页面时再url中传入商品数据
+            toshopping() {
+                for (var i = 0; i < this.values.length; i++) {
+                    if (this.values[i] == true) {
+                        var ids = '';
+                        var idsArr = [];
+                        this.values.forEach((item, index) => {
+                            idsArr.push(this.list[index].id);
+                        });
+                        ids = idsArr.join(',');
+                        // 2.将这些商品id以逗号分隔的形式传递到/site/shopping/:ids
+                        // params:将ids的值传递到路由规则shopping的ids参数中
+                        this.$router.push({
+                            name: 'shopping',
+                            params: {
+                                ids: ids
+                            }
+                        });
+                    } else {
+                        // this.$message.error('请选择商品');
+                        this.$message({
+                            showClose: true,
+                            message: '警告哦，请选择商品',
+                            type: 'warning'
+                        });
+                    }
+                }
+            },
             deldata(goodsid) {
                 // 设置一个索引，设置为-1因为没有数值有-1的索引
                 var index = -1;
@@ -218,6 +247,10 @@
                     if (item.id == obj.gid) {
                         item.buycount = obj.count;
                     }
+                });
+                updageItem({
+                    gid: obj.gid,
+                    count: obj.count
                 });
             },
             // 完成全选效果

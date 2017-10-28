@@ -27,7 +27,7 @@ var router = new vueRouter({
             component: layout,
             children: [
                 //    meta:{islogin:true}：表示要进行登录检查,只有登录过的才能进入到shopping组件，否则要进入到登录页面
-                { name: 'shopping', path: 'shopping', component: shopping, meta: { islogin: true } },
+                { name: 'shopping', path: 'shopping/:ids', component: shopping, meta: { islogin: true } },
                 { name: 'login', path: 'login', component: login },
                 { name: 'goodslist', path: 'goodslist', component: goodslist },
                 { name: 'goodsinfo', path: 'goodsinfo/:goodsid', component: goodsinfo },
@@ -112,6 +112,12 @@ Vue.filter('datafmt', (input, fmtstring) => {
 });
 // 利用router 的全局守卫钩子函数进行登录验证
 router.beforeEach((to, from, next) => {
+    // 判断是否再登陆页面，不在登录页面就保存次页面的路径
+    if (to.name != 'login') {
+        // 因为是保存的path，path是site
+        var togo = to.path.substring(6);
+        localStorage.setItem('currentRouteName', togo);
+    }
     if (to.meta.islogin) {
         axios.get('/site/account/islogin').then(res => {
             if (res.data.code == "logined") {

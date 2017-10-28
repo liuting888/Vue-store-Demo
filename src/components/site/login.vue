@@ -42,6 +42,7 @@
     export default {
         data() {
             return {
+                // 提交到服务器的数据
                 form: {
                     "user_name": "",
                     "password": ""
@@ -49,14 +50,22 @@
             }
         },
         methods: {
+            // 用来发送登陆请求
             login() {
                 this.$http.post('/site/account/login', this.form).then(res => {
                     if (res.data.status == 1) {
                         this.$message.error(res.data.message);
                         return;
-                    }
+                    };
+                    // 取出保存再localStorage里面的地址，登陆成功后跳回原来的页面
+                    var url = localStorage.getItem('currentRouteName');
+                    // 万一直接进入的登录页，登陆成功直接跳转到商品列表页面
+                    if (!url) {
+                        url = 'goodslist';
+                    };
+                    // 通过router跳转页面的具体路径
                     this.$router.push({
-                        name: 'car'
+                        path: url
                     });
                 })
             }
