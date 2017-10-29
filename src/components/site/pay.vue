@@ -95,9 +95,12 @@
         created() {
             this.getorderinfo();
         },
-        mounted() {
-            // 取出存在url里面的金额
-            var amount = this.$route.params.amount;
+        // 因为要等orderinfo里面取回数据以后才可以得到金额，所以需要用updated这个钩子
+        updated() {
+            // 取出存在orderinfo里面的金额
+            var amount = this.orderinfo.order_amount;
+            console.log(amount);
+            console.log(this.orderinfo);
             $("#container").erweima({
                 label: '前端工程师',
                 text: kits.payurl + '/' + this.orderid + '/' + amount
@@ -105,6 +108,7 @@
             // 开启定时器每隔5秒执行一次
             this.interval = setInterval(this.checkorderStatus, 5000);
         },
+        // 当页面离开以后应该清除this.interval
         beforeCreate() {
             if (this.interval) {
                 clearInterval(this.interval);
