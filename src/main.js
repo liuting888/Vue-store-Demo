@@ -22,6 +22,7 @@ import paysuccess from './components/site/paysuccess.vue';
 import payamount from './components/site/payamount.vue';
 import vipcenter from './components/site/vipcenter.vue';
 import vipmyorderlist from './components/site/myorderlist.vue';
+import orderdetial from './components/site/orderdetial.vue';
 var router = new vueRouter({
     routes: [
         { name: 'default', path: '/', redirect: '/site' },
@@ -41,6 +42,7 @@ var router = new vueRouter({
                 { name: 'paysuccesspc', path: 'paysuccesspc', component: paysuccess },
                 { name: 'vipcenter', path: 'vip/center', component: vipcenter, meta: { islogin: true } },
                 { name: 'vipmyorderlist', path: 'vip/myorderlist', component: vipmyorderlist, meta: { islogin: true } },
+                { name: 'orderdetial', path: 'vip/orderdetial/:orderid', component: orderdetial, meta: { islogin: true } },
                 { name: 'car', path: 'car', component: car }
             ]
         },
