@@ -39,6 +39,9 @@
 </template>
 
 <script>
+    import {
+        vm
+    } from '../../kits/vm.js';
     export default {
         data() {
             return {
@@ -63,6 +66,10 @@
                     if (!url) {
                         url = 'goodslist';
                     };
+                    // 写入localStroage的值为true （key="islogin"）
+                    localStorage.setItem('islogin', true);
+                    // 触发vm.$emit通知layout.vue的监听方法
+                    vm.$emit('changeshow');
                     // 通过router跳转页面的具体路径
                     this.$router.push({
                         path: url

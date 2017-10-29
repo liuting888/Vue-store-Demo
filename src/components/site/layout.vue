@@ -10,8 +10,10 @@
                         <a target="_blank" href="#"></a>
                     </div>
                     <div id="menu" class="right-box">
-                        <a href="/login.html">登录</a>
-                        <a href="/register.html">注册</a>
+                        <router-link v-if="!isvipshow" to="/site/login"> 登录</router-link>
+                        <a v-if="!isvipshow" href="/register.html">注册</a>
+                        <router-link v-if="isvipshow" to="/site/vip/center">会员中心</router-link>
+                        <a v-if="isvipshow" href="javascript:void(0)" @click="logout">退出</a>
                         <strong>|</strong>
                         <router-link to="/site/car">
                         <i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount">{{this.$store.getters.getCount}}</span>)</router-link>
@@ -112,7 +114,28 @@
     export default {
         data() {
             return {
+                isvipshow: false,
                 buycount: 0
+            }
+        },
+        methods: {
+            logout() {
+                // 1. 通知服务器当前用户的session清空
+                this.$http.get('/site/account/logout').then(res => {
+                    // 2.改变当前的isvipshow的值即可
+                    this.isvipshow = false;
+
+                    // 3. 将localStorage中的值修改成false
+                    localStorage.setItem('islogin', false);
+                });
+            },
+            checklogin() {
+                var islogin = localStorage.getItem('islogin');
+                if (islogin == "true") {
+                    this.isvipshow = true;
+                } else {
+                    this.isvipshow = false;
+                }
             }
         },
         mounted() {
@@ -120,6 +143,14 @@
             // vm.$on(key, (buycount) => {
             //     this.buycount += buycount;
             // })
+            // 监听 changeshow 这个事件
+            vm.$on('changeshow', () => {
+                // 1. 获取到localStorage中的key="islogin"对应的值
+                this.checklogin();
+            })
+
+            // 当页面重新刷新以后要去获取到localStorage中的这个登录状态，赋值给isvipshow,不然会存在内存中
+            this.checklogin();
         }
     }
 </script>

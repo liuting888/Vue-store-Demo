@@ -107,7 +107,7 @@
                                                             <br>
                                                             <router-link v-if="item.status<=1" v-bind="{to:'/site/pay/'+item.id}">|去付款</router-link>
                                                             <br>
-                                                            <a v-if="item.status<=1" href="javascript:void(0)">|取消</a>
+                                                            <a v-if="item.status<=1" href="javascript:void(0)"  @click="cacelOrder(item.id)">|取消</a>
                                                             <br>
                                                         </td>
                                                     </tr>
@@ -153,6 +153,11 @@
             this.getmyorderlist();
         },
         methods: {
+            cacelOrder(orderid) {
+                this.$http.get('/site/validate/order/cancelorder/' + orderid).then(res => {
+                    this.getmyorderlist();
+                })
+            },
             sizeChange(size) {
                 this.pageSize = size;
                 this.getmyorderlist();
