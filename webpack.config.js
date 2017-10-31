@@ -1,11 +1,17 @@
 const path = require("path");
 const htmlwp = require("html-webpack-plugin");
-var webpack = require('webpack');
+const webpack = require('webpack');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
-    entry: './src/main.js',
+    entry: {
+        build: './src/main.js',
+        vue: ['vue', 'vuex', 'axios', 'vue-router'],
+        element: ['element-ui'],
+        jquery: ['jquery', 'v-distpicker', 'vue-quill-editor']
+    },
     output: {
         path: path.join(__dirname, "/dist"),
-        filename: 'build.js'
+        filename: '[name].js'
     },
     resolve: {
         alias: {
@@ -18,10 +24,14 @@ module.exports = {
     module: {
         loaders: [{
                 test: /\.css$/,
-                loader: ['style-loader', 'css-loader']
+                // loader: ['style-loader', 'css-loader']
+                // css分离打包
+                loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' })
             }, {
                 test: /\.less$/,
-                loader: ['style-loader', 'css-loader', 'less-loader']
+                // loader: ['style-loader', 'css-loader', 'less-loader']
+                loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader!less-loader' })
+
             }, {
                 test: /\.(png|jpe?g|gif|svg|eot|svg|ttf|woff|woff2)$/,
                 loader: ['url-loader?limit=10240']
@@ -46,6 +56,25 @@ module.exports = {
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery"
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            names: ['vue', 'element', 'jquery']
+        }),
+        new ExtractTextPlugin("[name].css"),
+        // 将.vue组件中的css提取到公共style里
+        new webpack.LoaderOptionsPlugin({
+            test: /\.vue$/,
+            options: {
+                vue: {
+                    loaders: {
+                        css: ExtractTextPlugin.extract({
+                            fallback: 'vue-style-loader',
+                            use: 'css-loader',
+                            publicPath: "../"
+                        }),
+                    }
+                }
+            }
         })
     ]
 }
